@@ -5,6 +5,7 @@ import axios from 'axios';
 import Sidebar from './Sidebar';
 import Loading from './Loading';
 import AuthorsList from './AuthorsList';
+import AuthorDetail from './AuthorDetail'
 
 
 const instance = axios.create({
@@ -17,8 +18,13 @@ class App extends Component {
     super(props);
     this.state = {
       authors: [],
-      loading: true
+      loading: true,
+      currentAuthor:{}
+
     }
+
+    this.authorClicked = this.authorClicked.bind(this);
+
   }
 
   componentDidMount() {
@@ -28,13 +34,19 @@ class App extends Component {
       .catch(err => console.error(err));
   }
 
+  authorClicked(authorPicked){this.setState({currentAuthor : authorPicked})
+
+}
+
   getView() {
     if (this.state.loading) {
       return <Loading />
     } else {
-      return <AuthorsList authors={this.state.authors}/>
+      return <AuthorsList authors={this.state.authors} clicked={this.authorClicked}/>
     }
   }
+
+
 
   render() {
     return (
@@ -45,6 +57,7 @@ class App extends Component {
           </div>
           <div className="content col-10">
             {this.getView()}
+            <AuthorDetail detail={this.state.currentAuthor}/>
           </div>
         </div>
       </div>
